@@ -20,17 +20,27 @@ const convertCurrencies = require('../../currency')
 router.get('/', tokenMiddleware, queryCurrency, (req, res) => {
   const message = req.message
   req.query.count = 30
-  Client.getSautiData(req.query)
-    .then(records => {
-      convertCurrencies(records, req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
+  console.log(req.query)
+  Client.getSautiData(req.query,30)
+    .then(response => {
+      convertCurrencies(response, req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
         .then(converted => {
+          // console.log(
+          // `warning `, converted.warning,
+          // `message `, message,
+          // `records `, converted.data,
+          // `next `, converted.next,
+          // `prev `, converted.prev,
+          // `count `, converted.pageCount,
+          // `ratesUpdated: `, converted.ratesUpdated
+          // )
           res.status(200).json({
             warning: converted.warning,
             message: message,
             records: converted.data,
             next: converted.next,
             prev: converted.prev,
-            count: converted.count,
+            count: converted.pageCount,
             ratesUpdated: converted.ratesUpdated
           })
         })

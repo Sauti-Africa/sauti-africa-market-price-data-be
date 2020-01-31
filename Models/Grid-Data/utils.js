@@ -5,6 +5,9 @@
 // Flexible by allowing user to select whichever query they want
 // Used whereIn in the if/else if statements so that the query can be turned into an array
 // if/else if statements used for countries, markets, etc. for single selection and multiple selection
+const DBSt = require('../../database/dbSTConfig')
+
+
 const getSautiData = async (query) => {
 
     // * VARIABLES FROM ARGUMENT (query)
@@ -81,25 +84,25 @@ const getSautiData = async (query) => {
             return result[0].date
         })
 
-
+        console.log()
     if (count && next) {
         return {
-            data: await paginate(count, next),
+            records: await paginate(count, next),
             recentRecordDate: recentRecordDate
         }
     } else if (count) {
         return {
-            data: await paginate(count, 1),
+            records: await paginate(count, 1),
             recentRecordDate: recentRecordDate
         }
     } else if (next) {
         return {
-            data: await paginate(30, next),
+            records: await paginate(30, next),
             recentRecordDate: recentRecordDate
         }
     } else {
         return {
-            data: await paginate(30, 1),
+            records: await paginate(30, 1),
             recentRecordDate: recentRecordDate
         }
     }

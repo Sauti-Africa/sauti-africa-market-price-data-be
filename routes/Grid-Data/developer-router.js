@@ -14,8 +14,10 @@ router.get(
   (req, res) => {
     Developer.getSautiData(req.query, req.count)
       .then(response => {
-        // console.log(`response`,response)
-        if (!response.data || response.data.length < 1) {
+        // console.log(`response.data: `, response.records.data,
+        // `response.pagination `, response.records.pagination,      
+        // )
+        if (!response.records || response.records.length < 1) {
           res.status(404).json({
             apiCount: parseInt(req.count),
             message:
@@ -70,16 +72,23 @@ router.get(
   validate.queryProduct,
   (req, res) => {
     Developer.latestPriceAcrossAllMarkets(req.query)
-      .then(result => {
-        if (!result.records[0] || result.records[0].length < 1) {
+      .then(response => {
+        // console.log(`response latestPrice: `,response,
+        // `response.data: `, response.records.data,
+        // `response.pagination `, response.records.pagination,
+        // `response.recentRecordDate: `, response.recentRecordDate  
+        // )
+        // if (!result.records[0] || result.records[0].length < 1) {
+          if (!response) {
           res.status(404).json({
             apiCount: parseInt(req.count),
             message:
               "The product entered doesn't exist in the database, please check the list of available products"
           })
         } else {
-          convertCurrencies(result, req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
+          convertCurrencies(response, req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
             .then(converted => {
+              console.log(`converted: `, converted)
               allowedPeriodFilter(converted,req.allowableTimePeriod)
               .then(filtered => {
                 res.status(200).json({
@@ -109,10 +118,12 @@ router.get(
   validate.queryProductMarket,
   (req, res) => {
     Developer.latestPriceByMarket(req.query)
-      .then(record => {
-        if (record) {
-          convertCurrencies(record.records, req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
+      .then(response => {
+        console.log(`response: `, response)
+        if (response) {
+          convertCurrencies(response, req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
           .then(converted => {
+            console.log(`converted: `, converted)
             res.status(200).json({
               data:converted,
               message:req.message,
