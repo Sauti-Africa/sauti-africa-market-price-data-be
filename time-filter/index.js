@@ -9,7 +9,6 @@ module.exports = async (data, allowedPeriod ) =>{
     //convert that date to milliseconds
     const recentMS = recentDate.getTime()
     
-
     //calculate earliest allowable date. (recentMS - 7days) for free users or (recentMS - 730 days) for paid users.
     const recordStartMS = (recentMS - allowedPeriod)
     
@@ -21,14 +20,38 @@ module.exports = async (data, allowedPeriod ) =>{
         return (recordDateMS > recordStartMS)
     })
 
-    
-    return {
-         warning:data.warning,
-         records: filteredResults,
-         ratesUpdated:data.ratesUpdated,
-         next:data.next,
-         prev:data.prev,
-         count:data.count
+    if (await filteredResults){
+        return {
+            warning:data.warning,
+            records: filteredResults,
+            ratesUpdated:data.ratesUpdated,
+            next:data.next,
+            prev:data.prev,
+            count:data.count,
+            pageCount: data.pageCount
+       }
+    } else if (await !filteredResults && data.data.length > 0){
+        return {
+            message: `Your current plan is restricted to 7 calendar days of results`,
+            warning:data.warning,
+            records: filteredResults,
+            ratesUpdated:data.ratesUpdated,
+            next:data.next,
+            prev:data.prev,
+            count:data.count,
+            pageCount: data.pageCount
+       }
+    } else if (await !filteredResults && data.data.length === 0){
+        return {
+            message: `Your query returned no results`,
+            warning:data.warning,
+            records: filteredResults,
+            ratesUpdated:data.ratesUpdated,
+            next:data.next,
+            prev:data.prev,
+            count:data.count,
+            pageCount: data.pageCount
+       }
     }
 }
 

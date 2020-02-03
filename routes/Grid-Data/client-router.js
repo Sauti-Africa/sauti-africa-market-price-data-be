@@ -23,24 +23,18 @@ router.get('/', tokenMiddleware, queryCurrency, (req, res) => {
   console.log(req.query)
   Client.getSautiData(req.query,30)
     .then(response => {
+      console.log(response)
       convertCurrencies(response, req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
         .then(converted => {
-          // console.log(
-          // `warning `, converted.warning,
-          // `message `, message,
-          // `records `, converted.data,
-          // `next `, converted.next,
-          // `prev `, converted.prev,
-          // `count `, converted.pageCount,
-          // `ratesUpdated: `, converted.ratesUpdated
-          // )
+          console.log(converted.pageCount)
           res.status(200).json({
             warning: converted.warning,
             message: message,
             records: converted.data,
             next: converted.next,
             prev: converted.prev,
-            count: converted.pageCount,
+            rowCount: converted.count,
+            pageCount: converted.pageCount,
             ratesUpdated: converted.ratesUpdated
           })
         })
@@ -66,7 +60,9 @@ router.get('/superlist', (req, res) => {
     })
 })
 
-//playground routes//
+//! playground routes//
+
+
 //product date range//
 router.get('/playground/date', playgroundDR, (req, res) => {
   Client.getProductPriceRangePlay(req.query)

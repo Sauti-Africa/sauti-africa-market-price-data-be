@@ -9,7 +9,6 @@ attachPaginate();
 const { getSautiData } = require('./utils.js')
 
 // fn to get the latest price for a product across all markets //
-//! Doesn't need pagination
 async function latestPriceAcrossAllMarkets(query) {
   const {
     product
@@ -54,7 +53,7 @@ async function latestPriceAcrossAllMarkets(query) {
 
 // fn to get the latest price for a product by market //
 
-//!this code works, needs cleanup. Issue is at the route in the first promise. Object returned by model is not what is being received in the promise.
+
 async function latestPriceByMarket(query) {
   const {
     product,
@@ -81,7 +80,7 @@ async function latestPriceByMarket(query) {
   const records = [await queryResult[0]]
 
   let data = {
-    data: records[0],
+    data: [records[0]],
     pagination: {
       currentPage:0,
       total: 0,
@@ -119,6 +118,7 @@ async function latestPriceByMarket(query) {
   
 
 }
+
 // fn that returns a list of items, markets by default //
 function getListsOfThings(query, selector) {
   let queryOperation = DBSt('platform_market_prices2')
@@ -140,56 +140,80 @@ function getListsOfThings(query, selector) {
 }
 // fn that returns records for a product via date range, with pagination //
 async function getProductPriceRange(query) {
+  
   let {
     product,
     startDate,
     endDate,
-    count
+    count,
+    next
   } = query
-  let entries
-  let totalCount
-  if (query.next) {
-    const cursorArray = query.next.split('_')
-    const nextDate = new Date(cursorArray[0])
-    const nextId = cursorArray[1]
-    let queryOperation = DBSt('platform_market_prices2')
-      .select('*')
-      .where('product', product)
-      .andWhereBetween('date', [startDate, endDate])
-    entries = await queryOperation
-      .where(function () {
-        this.whereRaw('date < ?', [nextDate]).orWhere(function () {
-          this.whereRaw('date = ?', [nextDate]).andWhereRaw('id <= ?', [nextId])
+
+  console.log(`product `, product)
+  console.log(`startDate `, startDate)
+  console.log(`endDate `, endDate)
+  console.log(`count `, count)
+  console.log(`next `, next)
+
+  let queryOperation = DBSt('platform_market_prices2');
+
+  // console.log(await queryOperation)
+
+  const paginate = async (perPage, currentPage) => await queryOperation
+        .where('active', (query.a = 1))
+        .orderBy('date', 'desc')
+        .orderBy('id', 'desc')
+        .paginate({
+            perPage,
+            currentPage
         })
-      })
-      .where('active', (query.a = 1))
-      .orderBy('date', 'desc')
-      .orderBy('id', 'desc')
-      .limit(Number(count) + 1)
+        // .then(result => {
+        //   console.log(`paginate `,result)
+        //     return result
+        // })
+  
+  //? sets the filtered query
+
+  queryOperation = queryOperation
+    .select('*')
+    .where('product','=', product)
+    .andWhereBetween('date', [startDate, endDate])
+
+    // console.log(await queryOperation)
+
+  const recentRecordDate = await queryOperation
+        .where('active', (query.a = 1))
+        .orderBy('date', 'desc')
+        .orderBy('id', 'desc')
+        .then(result => {
+          // return console.log(`second queryOperation `,result)
+            return result[0].date
+        })
+
+  if (count && next){
+    console.log(`count and next`)
+    return{
+      records: await paginate(count,next),
+      recentRecordDate: recentRecordDate
+    } 
+  } else if (count){
+    console.log(`count `)
+    return{
+      records: await paginate(count,1),
+      recentRecordDate: recentRecordDate
+    }
+  } else if (next){
+    console.log(`next `)
+      return{
+        records: await paginate(30,next),
+        recentRecordDate: recentRecordDate
+      }
   } else {
-    let queryOperation = DBSt('platform_market_prices2')
-      .select('*')
-      .where('product', product)
-      .andWhereBetween('date', [startDate, endDate])
-    totalCount = await queryOperation.clone().count()
-    entries = await queryOperation
-      .where('active', (query.a = 1))
-      .orderBy('date', 'desc')
-      .orderBy('id', 'desc')
-      .limit(Number(count) + 1)
-  }
-  const lastEntry = entries[entries.length - 1]
-  entries.length ? (next = `${lastEntry.date}_${lastEntry.id}`) : (next = null)
-  const entriesOffset = entries.splice(0, Number(count))
-  const firstEntry = entriesOffset[0]
-  entriesOffset.length ?
-    (prev = `${firstEntry.date}_${firstEntry.id}`) :
-    (prev = null)
-  return {
-    records: entriesOffset,
-    next: next,
-    prev: prev,
-    count: totalCount
+    console.log(`else `)
+      return{
+        records: await paginate(count,1),
+        recentRecordDate: recentRecordDate
+      }
   }
 }
 

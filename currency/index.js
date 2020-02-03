@@ -52,7 +52,6 @@ const getExchangeRates = async () => {
         'http://sautiafrica.org/endpoints/api.php?url=v1/exchangeRates/&type=json'
       )
       .then(res => {
-        
         res.data.updated = new Date().toUTCString() // Store time we pulled from the API
         client.set('recentExchangeRates', JSON.stringify(res.data), 'EX', 600) // cache for 10 minutes
         client.set('lastKnownExchangeRates', JSON.stringify(res.data)) // cache indefinitely as fallback in case API goes down and recentExchangeRates has expired
@@ -79,7 +78,6 @@ const convertCurrency =  (source, target, value, exchangeRates) => {
 module.exports = async (response, targetCurrency) => {
   return await getExchangeRates()
     .then(rates => {
-      console.log(`responseStartCurrency: `,response.records.data[0])
       if (response.records){
         if (!response.records){
            return  {
@@ -131,7 +129,7 @@ module.exports = async (response, targetCurrency) => {
             prev: Number(response.records.pagination.currentPage)-1,
             count: response.records.pagination.total,
             pageCount: response.records.pagination.lastPage,
-            recentRecordDate:response.recentRecordDate
+            recentRecordDate:response.recentRecordDate,
           }
         }
       }
