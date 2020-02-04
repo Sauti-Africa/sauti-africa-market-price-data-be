@@ -11,7 +11,11 @@ const json = JSON.stringify({
 const options = {
     method: 'POST',
     url: 'https://sauti-africa-market-prices.auth0.com/oauth/token',
-    headers: { 'content-type': 'application/json' },
+    headers: { 
+        'content-type': 'application/json',
+        'Access-Control-Allow-Origin':'*',
+        'Access-Control-Allow-Headers':'Origin, X-Requested-With, Content-Type, Accept' 
+    },
     body: json
 }
 // * JSON & OPTIONS ARE DEFAULT SETTINGS FOR RETRIEVING TOKEN TO ACCESS API \\
@@ -31,13 +35,17 @@ const fetchUserSchema = async (req, res) => {
                 url: `https://sauti-africa-market-prices.auth0.com/api/v2/users/${req.body.sub}`,
                 headers: {
                     'content-type': 'application/json',
-                    authorization: `Bearer ${result}`
+                    authorization: `Bearer ${result}`,
+                    'Access-Control-Allow-Origin':'*',
+                    'Access-Control-Allow-Headers':'Origin, X-Requested-With, Content-Type, Accept' 
                 }
             }
 
             return request(managementAPI)
                 .then(result => { fetchedData = { ...fetchedData, ...JSON.parse(result) }})
                 .then(result => { 
+                    res.header("Access-Control-Allow-Origin", "*");
+                    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
                     res.status(200).json(fetchedData)
                 
                 })
