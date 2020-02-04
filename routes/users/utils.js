@@ -22,7 +22,9 @@ const fetchUserSchema = async (req, res) => {
 
     // * SET TOKEN FOR AUTHORIZED API USAGE
     await request(options)
-        .then(result => !!result === true && JSON.parse(result).access_token)
+        .then(result => {
+            return !!result === true && JSON.parse(result).access_token
+        })
         .then(result => {
             const managementAPI = {
                 method: 'GET',
@@ -35,7 +37,10 @@ const fetchUserSchema = async (req, res) => {
 
             return request(managementAPI)
                 .then(result => { fetchedData = { ...fetchedData, ...JSON.parse(result) }})
-                .then(result => res.status(200).json(fetchedData))
+                .then(result => { 
+                    res.status(200).json(fetchedData)
+                
+                })
         })
 }
 

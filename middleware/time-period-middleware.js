@@ -2,7 +2,6 @@ module.exports = async (req,res,next) => {
 
     const { role } = req
 
-    // console.log(`time period middleware`,req)  
 
     //set values for freePeriod/paidPeriod in milliseconds
     const freePeriod = Number(604800000)

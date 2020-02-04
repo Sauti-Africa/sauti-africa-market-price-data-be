@@ -84,7 +84,6 @@ const getSautiData = async (query) => {
             return result[0].date
         })
 
-        console.log()
     if (count && next) {
         return {
             records: await paginate(count, next),

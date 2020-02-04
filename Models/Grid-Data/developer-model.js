@@ -28,7 +28,6 @@ async function latestPriceAcrossAllMarkets(query) {
     [product, product]
   )
 
-  // console.log(`LPAAMmodel `, await data[0])
   
   let data = {
     data: records[0],
@@ -40,14 +39,12 @@ async function latestPriceAcrossAllMarkets(query) {
   }
 
 
-
   return {
     
     records: data,
     recentRecordDate: records[0][0].date,
 
       }
-  //return console.log(await records[0]) 
   
 }
 
@@ -88,34 +85,12 @@ async function latestPriceByMarket(query) {
       }
   }
 
-
-
   return {
     
     records: data,
     recentRecordDate: records[0].date,
 
       }
-
-
-  // let returnObj =  await {
-  //   records: result[0],
-  //   recentRecordDate: result[0].date,
-  //   pagination: {
-  //     currentPage:0,
-  //     total: 0,
-  //     lastPage: 0
-  //     }
-  // }
-
-  // try{
-  //   console.log(await returnObj)
-  //   return await returnObj;
-  // }
-  // catch(error){
-  //   console.log(error)
-  // }
-  
 
 }
 
@@ -149,15 +124,7 @@ async function getProductPriceRange(query) {
     next
   } = query
 
-  console.log(`product `, product)
-  console.log(`startDate `, startDate)
-  console.log(`endDate `, endDate)
-  console.log(`count `, count)
-  console.log(`next `, next)
-
   let queryOperation = DBSt('platform_market_prices2');
-
-  // console.log(await queryOperation)
 
   const paginate = async (perPage, currentPage) => await queryOperation
         .where('active', (query.a = 1))
@@ -167,10 +134,6 @@ async function getProductPriceRange(query) {
             perPage,
             currentPage
         })
-        // .then(result => {
-        //   console.log(`paginate `,result)
-        //     return result
-        // })
   
   //? sets the filtered query
 
@@ -179,37 +142,30 @@ async function getProductPriceRange(query) {
     .where('product','=', product)
     .andWhereBetween('date', [startDate, endDate])
 
-    // console.log(await queryOperation)
-
   const recentRecordDate = await queryOperation
         .where('active', (query.a = 1))
         .orderBy('date', 'desc')
         .orderBy('id', 'desc')
         .then(result => {
-          // return console.log(`second queryOperation `,result)
             return result[0].date
         })
 
   if (count && next){
-    console.log(`count and next`)
     return{
       records: await paginate(count,next),
       recentRecordDate: recentRecordDate
     } 
   } else if (count){
-    console.log(`count `)
     return{
       records: await paginate(count,1),
       recentRecordDate: recentRecordDate
     }
   } else if (next){
-    console.log(`next `)
       return{
         records: await paginate(30,next),
         recentRecordDate: recentRecordDate
       }
   } else {
-    console.log(`else `)
       return{
         records: await paginate(count,1),
         recentRecordDate: recentRecordDate

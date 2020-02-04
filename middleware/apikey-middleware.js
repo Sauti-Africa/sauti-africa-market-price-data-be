@@ -12,10 +12,6 @@ module.exports = async (req, res, next) => {
   /*=== checks validity of key ===*/
   if (key) {
     try {
-      // Experimental Postgres key validation. Not currently implemented
-      // validKey = await db('apiKeys')
-      //   .where({ key: db.raw("digest(?, 'md5')", [key]) })
-      //   .first()
       for (candidate of keyCandidates) {
         const k = await bcrypt.compare(key, candidate.key)
 
@@ -30,7 +26,6 @@ module.exports = async (req, res, next) => {
           userId = await db('apiKeys')
           .select('user_id', 'user_role')
           .where({key:hashedKey}) 
-          console.log(`userID:`,userId[0].user_id, `user_role`, userId[0].user_role)
           validKey = key
             break
         }

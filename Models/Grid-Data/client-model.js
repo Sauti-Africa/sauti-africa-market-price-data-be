@@ -67,7 +67,7 @@ function mcpList() {
 
 // Playground functions
 // filter playground function //
-// this playground endpoint's route is in sever.js //
+// this playground endpoint's route is in server.js //
 
 function getPlay(query) {
   let queryOperation = DBSt("platform_market_prices2");

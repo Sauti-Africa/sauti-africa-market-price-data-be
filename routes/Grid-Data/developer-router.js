@@ -33,7 +33,9 @@ router.get(
                   records: filtered.records,
                   ratesUpdated: filtered.ratesUpdated,
                   next: filtered.next,
-                  prev: filtered.prev
+                  prev: filtered.prev,
+                  pageCount: filtered.pageCount,
+                  rowCount: filtered.count
                 })
               : res.status(200).json({
                   apiCount: parseInt(req.count),
@@ -42,7 +44,9 @@ router.get(
                   records: filtered.records,
                   ratesUpdated: filtered.ratesUpdated,
                   next: filtered.next,
-                  prev: filtered.prev
+                  prev: filtered.prev,
+                  pageCount: filtered.pageCount,
+                  rowCount: filtered.count
                 })
           })
           })

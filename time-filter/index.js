@@ -1,7 +1,6 @@
 
 
 module.exports = async (data, allowedPeriod ) =>{
-    // console.log(`data time filter `, data)
 
     //create date from most recent record in returned data
     const recentDate = new Date(data.recentRecordDate)

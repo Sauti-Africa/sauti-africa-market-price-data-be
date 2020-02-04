@@ -135,7 +135,7 @@ module.exports = async (response, targetCurrency) => {
       }
     })
     .catch(error => {
-      console.log(`catch `, error)
+      console.log(`Currency Conversion Error:  `, error)
       return {
         warning: 'Currency conversion failed. Prices not converted',
         response
