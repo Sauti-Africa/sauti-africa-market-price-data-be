@@ -41,7 +41,7 @@ server.use(express.json())
 server.use('/api/apikeyRoute', apikeyRoute)
 server.use('/sauti/developer', apiAuthenticator, apiLimiter, timePeriod, developerRouter)
 server.use('/sauti/client', clientRouter)
-server.use('/api/users', userRoleRouter)
+server.use('/api/users', cors(), userRoleRouter)
 
 // * LANDING PAGE FOR BE
 server.get('/', (req, res) => {
