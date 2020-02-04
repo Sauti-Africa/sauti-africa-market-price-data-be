@@ -53,5 +53,3 @@ module.exports = async (data, allowedPeriod ) =>{
        }
     }
 }
-
-//! TODO: return message when record [] is empty that user is limited to allowedPeriod
