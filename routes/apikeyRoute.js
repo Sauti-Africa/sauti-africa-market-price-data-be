@@ -14,7 +14,10 @@ router.post('/private', jwtCheck, rules, async (req, res) => {
   const options = {
     method: 'GET',
     url: `https://sauti-africa-market-prices.auth0.com/api/v2/users/${req.body.id}`,
-    headers: { authorization: `Bearer ${process.env.api_token}` }
+    headers: {
+      authorization: `Bearer ${process.env.api_token}`,
+      'Access-Control-Allow-Origin': '*'
+     }
   };
   const key = uuidAPIKey.create()
   //generate new date to be written to table
