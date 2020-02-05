@@ -29,6 +29,13 @@ const moesifMiddleware = moesifExpress({
   logBody: true
 })
 
+
+const corsOptions = {
+  origin: 'https://sauti-market-price-data-fe.herokuapp.com/',
+  
+}
+
+
 // * Server uses middleware to add functionality
 server.use(moesifMiddleware)
 server.use(apiThrottler)
@@ -36,6 +43,8 @@ server.use(compression())
 server.use(helmet())
 server.use(cors())
 server.use(express.json())
+
+
 
 
 //manually append cors params to header
