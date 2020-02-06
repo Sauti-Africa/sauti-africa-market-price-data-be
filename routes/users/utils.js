@@ -13,8 +13,8 @@ const options = {
     url: 'https://sauti-africa-market-prices.auth0.com/oauth/token',
     headers: { 
         'content-type': 'application/json',
-        'Access-Control-Allow-Origin':'*',
-        'Access-Control-Allow-Headers':'Origin, X-Requested-With, Content-Type, Accept' 
+        // 'Access-Control-Allow-Origin':'*',
+        // 'Access-Control-Allow-Headers':'Origin, X-Requested-With, Content-Type, Accept' 
     },
     body: json
 }
@@ -36,8 +36,8 @@ const fetchUserSchema = async (req, res) => {
                 headers: {
                     'content-type': 'application/json',
                     authorization: `Bearer ${result}`,
-                    'Access-Control-Allow-Origin':'*',
-                    'Access-Control-Allow-Hneaders':'Origin, X-Requested-With, Content-Type, Accept' 
+                    // 'Access-Control-Allow-Origin':'*',
+                    // 'Access-Control-Allow-Hneaders':'Origin, X-Requested-With, Content-Type, Accept' 
                 }
             }
 
@@ -47,8 +47,8 @@ const fetchUserSchema = async (req, res) => {
                          ...fetchedData, 
                          ...JSON.parse(result),
                          headers: {
-                            'Access-Control-Allow-Origin':'*',
-                            'Access-Control-Allow-Headers':'Origin, X-Requested-With, Content-Type, Accept' 
+                            // 'Access-Control-Allow-Origin':'*',
+                            // 'Access-Control-Allow-Headers':'Origin, X-Requested-With, Content-Type, Accept' 
                          } 
                         }
                 })

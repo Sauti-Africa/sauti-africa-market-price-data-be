@@ -14,10 +14,7 @@ router.post('/private', jwtCheck, rules, async (req, res) => {
   const options = {
     method: 'GET',
     url: `https://sauti-africa-market-prices.auth0.com/api/v2/users/${req.body.id}`,
-    headers: {
-      authorization: `Bearer ${process.env.api_token}`,
-      'Access-Control-Allow-Origin': '*'
-    }
+    headers: { authorization: `Bearer ${process.env.api_token}` }
   };
   const key = uuidAPIKey.create()
   //generate new date to be written to table
@@ -26,7 +23,7 @@ router.post('/private', jwtCheck, rules, async (req, res) => {
   const dateMilliseconds = date.getTime();
 
   const user = await db('apiKeys')
-    .where({ user_id: id })
+    .where({ user_id: req.body.id })
     .first()
 
   //constructs object for auth0 update endpoint
@@ -36,23 +33,22 @@ router.post('/private', jwtCheck, rules, async (req, res) => {
 
   request(options, async function (error, response, body) {
     if (error) console.log(error);
-    return JSON.parse(response)
+    // console.log(response)
+    return JSON.parse(body)
   })
-    .then(async res => {
-      const result = await JSON.parse(res);
+    .then(res => {
+      const result = JSON.parse(res);
+      console.log(result)
       return result.app_metadata.role
     })
-    .catch(err => console.log(err))
     .then(role => {
       bcrypt.hash(key.apiKey, 10, async (_err, hash) => {
         if (user) {
           try {
             await db('apiKeys')
-              .where({ user_id: id })
+              .where({ user_id: req.body.id })
               //update table with key hash. Don't reset reset_date.
               .update({ key: hash, user_role: role })
-            res.header("Access-Control-Allow-Origin", "https://jolly-panini-1f3c1c.netlify.com/profile");
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             res.status(200).json({ existed: true, key: key.apiKey })
           } catch (err) {
             // console.log(err)
@@ -61,7 +57,7 @@ router.post('/private', jwtCheck, rules, async (req, res) => {
           try {
             await db('apiKeys').insert({
               key: hash,
-              user_id: id,
+              user_id: req.body.id,
               reset_date: dateMilliseconds,
               user_role: role
             })
