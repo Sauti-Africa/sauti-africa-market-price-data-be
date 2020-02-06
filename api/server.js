@@ -29,6 +29,12 @@ const moesifMiddleware = moesifExpress({
   logBody: true
 })
 
+
+server.use(function(req, res, next) { 
+  res.header("Access-Control-Allow-Origin", "*"); res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); 
+  next(); 
+});  
+
 // * Server uses middleware to add functionality
 server.use(moesifMiddleware)
 server.use(apiThrottler)
