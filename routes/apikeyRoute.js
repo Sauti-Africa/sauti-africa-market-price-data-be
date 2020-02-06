@@ -15,13 +15,11 @@ router.post('/private', jwtCheck, rules, async (req, res) => {
     client_id: process.env.client_id,
     client_secret: process.env.client_secret,
     audience: 'https://sauti-africa-market-prices.auth0.com/api/v2/',
-    grant_type: 'client_credentials'
   })
 
   const options = {
     method: 'GET',
-    url: `https://sauti-africa-market-prices.auth0.com/api/v2/users/${req.body.id}`,
-    body: json
+    url: `https://sauti-africa-market-prices.auth0.com/api/v2/users/${req.body.id}`
   };
   const key = uuidAPIKey.create()
   //generate new date to be written to table
