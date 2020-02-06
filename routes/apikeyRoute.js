@@ -14,7 +14,10 @@ router.post('/private', jwtCheck, rules, async (req, res) => {
   const options = {
     method: 'GET',
     url: `https://sauti-africa-market-prices.auth0.com/api/v2/users/${req.body.id}`,
-    headers: { authorization: `Bearer ${process.env.api_token}` }
+    headers: {
+      authorization: `Bearer ${process.env.api_token}`,
+      'Access-Control-Allow-Origin': '*'
+    }
   };
   const key = uuidAPIKey.create()
   //generate new date to be written to table
@@ -48,6 +51,8 @@ router.post('/private', jwtCheck, rules, async (req, res) => {
               .where({ user_id: id })
               //update table with key hash. Don't reset reset_date.
               .update({ key: hash, user_role: role })
+            res.header("Access-Control-Allow-Origin", "https://jolly-panini-1f3c1c.netlify.com/profile");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             res.status(200).json({ existed: true, key: key.apiKey })
           } catch (err) {
             // console.log(err)

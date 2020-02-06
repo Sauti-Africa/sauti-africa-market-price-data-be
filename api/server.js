@@ -40,7 +40,10 @@ server.use(moesifMiddleware)
 server.use(apiThrottler)
 server.use(compression())
 server.use(helmet())
-server.use(cors())
+server.use(cors({
+  origin: ['https://jolly-panini-1f3c1c.netlify.com','https://jolly-panini-1f3c1c.netlify.com/profile'],
+  credentials: true
+}))
 server.use(express.json())
 
 // * ROUTES BELOW
