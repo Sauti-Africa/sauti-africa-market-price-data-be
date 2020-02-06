@@ -66,6 +66,8 @@ router.post('/private', jwtCheck, rules, async (req, res) => {
               reset_date: dateMilliseconds,
               user_role: role
             })
+            res.header("Access-Control-Allow-Origin", "https://jolly-panini-1f3c1c.netlify.com/profile");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             res.status(200).json({ existed: false, key: key.apiKey })
           } catch (err) {
             res.status(500).json({ Message: `There was an error when updating the API key`, Error: err })
