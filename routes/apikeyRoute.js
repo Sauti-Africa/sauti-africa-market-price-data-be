@@ -23,7 +23,10 @@ router.post('/private', jwtCheck, async (req, res) => {
           .where({ user_id: req.body.id })
           //update table with key hash. Don't reset reset_date.
           .update({ key: hash, user_role: req.body.role })
-        res.status(200).json({ existed: true, key: key.apiKey })
+        res.header("Allow-Control-Allow-Origin", "http://localhost:3000")
+        res.status(200).json({ 
+          existed: true, 
+          key: key.apiKey })
       } catch (err) {
         console.log(err)
         res.send(err)
