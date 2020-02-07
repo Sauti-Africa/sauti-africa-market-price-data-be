@@ -42,7 +42,7 @@ module.exports = async (req, res, next) => {
         
         
         if (user) {
-          const addRolesToUser = (user) => {
+           const addRolesToUser = (user) => {
             console.log(user)
             if (user.email.includes('@sautiafrica.org')) {
               user.role = "admin";
@@ -51,10 +51,11 @@ module.exports = async (req, res, next) => {
               user.role = "freeUser";
             }
           }
+          if (error) throw new Error(error)
+          addRolesToUser(user);
         }
 
-        if (error) throw new Error(error)
-        addRolesToUser(user);
+        
       })
     }
   })

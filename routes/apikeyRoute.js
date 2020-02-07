@@ -22,7 +22,7 @@ router.post('/private', jwtCheck, async (req, res) => {
         await db('apiKeys')
           .where({ user_id: req.body.id })
           //update table with key hash. Don't reset reset_date.
-          .update({ key: hash, user_role: `freeUser` })
+          .update({ key: hash, user_role: req.body.role })
         res.status(200).json({ existed: true, key: key.apiKey })
       } catch (err) {
         console.log(err)
@@ -34,7 +34,7 @@ router.post('/private', jwtCheck, async (req, res) => {
           key: hash,
           user_id: req.body.id,
           reset_date: dateMilliseconds,
-          user_role: `freeUser`
+          user_role: req.body.role
         })
         res.status(200).json({ existed: false, key: key.apiKey })
       } catch (err) {
