@@ -16,7 +16,7 @@ router.post('/private', jwtCheck, async (req, res) => {
     .where({ user_id: req.body.id })
     .first()
 
-  bcrypt.hash(key.apiKey, 10, (_err, hash) => {
+  bcrypt.hash(key.apiKey, 10, async (_err, hash) => {
     if (user) {
       try {
         await db('apiKeys')
