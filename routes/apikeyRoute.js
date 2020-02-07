@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs')
 const db = require('../api-key/dbConfig')
 const jwtCheck = require('../middleware/token-middleware')
 
-router.post('/private', jwtCheck, async (req, res) => {
+router.post('/private', async (req, res) => {
   const key = uuidAPIKey.create()
   //generate new date to be written to table
   const date = new Date();
