@@ -35,7 +35,7 @@ server.use(apiThrottler)
 server.use(compression())
 server.use(helmet())
 server.use(cors({
-  origin: ['https://jolly-panini-1f3c1c.netlify.com','https://jolly-panini-1f3c1c.netlify.com/profile'],
+  origin: ['https://jolly-panini-1f3c1c.netlify.com','https://jolly-panini-1f3c1c.netlify.com/profile', 'http://localhost:3000', 'http://localhost:3000/profile/'],
   credentials: true
 }))
 server.use(express.json())
@@ -65,8 +65,5 @@ server.get('/sauti', (req, res) => {
     })
 })
 
-// TODO: CLEAN UP TEMP CODE AFTER FINISHED WRITING MIDDLEWARE FOR API
-const roles = require('../middleware/rules/rules-middleware')
-// roles();
 
 module.exports = server

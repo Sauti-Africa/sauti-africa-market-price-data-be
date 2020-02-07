@@ -30,12 +30,13 @@ const fetchUserSchema = async (req, res) => {
             return !!result === true && JSON.parse(result).access_token
         })
         .then(result => {
+            console.log(`userRoles result `, result)
             const managementAPI = {
                 method: 'GET',
                 url: `https://sauti-africa-market-prices.auth0.com/api/v2/users/${req.body.sub}`,
                 headers: {
                     'content-type': 'application/json',
-                    authorization: `Bearer ${result}`,
+                    authorization: `Bearer ${result}`
                     // 'Access-Control-Allow-Origin':'*',
                     // 'Access-Control-Allow-Hneaders':'Origin, X-Requested-With, Content-Type, Accept' 
                 }

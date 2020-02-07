@@ -39,16 +39,21 @@ module.exports = async (req, res, next) => {
       request(managementAPI, async (error, response, body) => {
         const user = await JSON.parse(body);
 
-        const addRolesToUser = async (user) => {
-          if (user.email.includes('@sautiafrica.org')) {
-            user.role = "admin";
-          } else {
-            user.role = "freeUser";
+        
+        
+        if (user) {
+          const addRolesToUser = (user) => {
+            console.log(user)
+            if (user.email.includes('@sautiafrica.org')) {
+              user.role = "admin";
+            } else {
+              console.log(`User does not exist`, user)
+              user.role = "freeUser";
+            }
           }
         }
 
         if (error) throw new Error(error)
-
         addRolesToUser(user);
       })
     }
