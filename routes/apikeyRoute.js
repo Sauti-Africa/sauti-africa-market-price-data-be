@@ -39,6 +39,7 @@ router.post('/private', jwtCheck, async (req, res) => {
           reset_date: dateMilliseconds,
           user_role: req.body.role
         })
+        res.header("Allow-Control-Allow-Origin", "http://localhost:3000")
         res.status(200).json({ existed: false, key: key.apiKey })
       } catch (err) {
         console.log(err)
