@@ -14,7 +14,6 @@ const timePeriod = require('../middleware/time-period-middleware')
 const apikeyRoute = require('../routes/apikeyRoute')
 const clientRouter = require('../routes/Grid-Data//client-router.js')
 const developerRouter = require('../routes/Grid-Data/developer-router.js')
-const userRoleRouter = require('../routes/users/userRoles')
 
 //Initialize the rate limit 
 const apiThrottler = rateLimit({
@@ -41,7 +40,6 @@ server.use(express.json())
 server.use('/api/apikeyRoute', apikeyRoute)
 server.use('/sauti/developer', apiAuthenticator, apiLimiter, timePeriod, developerRouter)
 server.use('/sauti/client', clientRouter)
-server.use('/api/users', userRoleRouter)
 
 // * LANDING PAGE FOR BE
 server.get('/', (req, res) => {
@@ -62,8 +60,5 @@ server.get('/sauti', (req, res) => {
     })
 })
 
-// TODO: CLEAN UP TEMP CODE AFTER FINISHED WRITING MIDDLEWARE FOR API
-const roles = require('../middleware/rules/rules-middleware')
-// roles();
 
 module.exports = server
