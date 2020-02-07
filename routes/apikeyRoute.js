@@ -12,9 +12,21 @@ router.post('/private', jwtCheck, async (req, res) => {
   //get the exact date in milliseconds
   const dateMilliseconds = date.getTime();
 
-  const user = await db('apiKeys')
+  let user = await db('apiKeys');
+
+  if (user) {
+    try{
+      user = await db('apiKeys')
     .where({ user_id: req.body.id })
     .first()
+    }
+    catch(err) {
+      console.log(err)
+      res.send(err)
+    }
+  }
+
+  
 
   bcrypt.hash(key.apiKey, 10, async (_err, hash) => {
     if (user) {
