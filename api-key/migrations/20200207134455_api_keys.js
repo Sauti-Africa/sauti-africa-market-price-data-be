@@ -11,7 +11,7 @@ exports.up = function (knex) {
         .notNullable()
       //reset_date stores the date as milliseconds as an integer
       tbl
-        .integer('reset_date')
+        .bigInteger('reset_date')
         .notNullable()
       tbl
         .integer('apikey_count')

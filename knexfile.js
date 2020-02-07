@@ -36,7 +36,7 @@ module.exports = {
   /*=== production ===*/
   production: {
     client: 'pg', // install this package
-    connection: process.env.DATABASE_URL, // heroku sets this env variable
+    connection: process.env.DATABASE_URL, // must be manually set from heroku data/dataclips settings
     migrations: {
       directory: './api-key/migrations'
     }

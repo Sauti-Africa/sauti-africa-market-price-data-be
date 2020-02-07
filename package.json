@@ -9,7 +9,8 @@
     "test": "jest --coverage --detectOpenHandles --forceExit",
     "testWatch": "jest --watchAll",
     "start": "pm2-runtime index.js -i max",
-    "format": "prettier --write \"**/*.{js,scss,css,html,json,md,less,tsx}\""
+    "format": "prettier --write \"**/*.{js,scss,css,html,json,md,less,tsx}\"",
+    "migrate": "knex migrate:latest"
   },
   "repository": {
     "type": "git",
