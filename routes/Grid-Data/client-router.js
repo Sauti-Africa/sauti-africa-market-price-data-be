@@ -59,7 +59,6 @@ router.get('/superlist', (req, res) => {
 
 //! playground routes//
 
-
 //product date range//
 router.get('/playground/date', playgroundDR, (req, res) => {
   Client.getProductPriceRangePlay(req.query)

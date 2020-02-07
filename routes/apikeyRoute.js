@@ -3,24 +3,9 @@ const router = express.Router()
 const uuidAPIKey = require('uuid-apikey')
 const bcrypt = require('bcryptjs')
 const db = require('../api-key/dbConfig')
-const { fetchUserSchema } = require('../routes/users/utils')
-const axios = require('axios')
 const jwtCheck = require('../middleware/token-middleware')
-const rules = require('../middleware/rules/rules-middleware');
 
-router.post('/private', jwtCheck, rules, async (req, res) => {
-  // * REQUEST PROMISE SETUP FOR AUTHORIZED API CALLS WITH TOKEN BY THE API MANAGEMENT.
-  // const request = require('request-promise');
-  // const json = JSON.stringify({
-  //   client_id: process.env.client_id,
-  //   client_secret: process.env.client_secret,
-  //   audience: 'https://sauti-africa-market-prices.auth0.com/api/v2/',
-  // })
-
-  // const options = {
-  //   method: 'GET',
-  //   url: `https://sauti-africa-market-prices.auth0.com/api/v2/users/${req.body.id}`
-  // };
+router.post('/private', jwtCheck, async (req, res) => {
   const key = uuidAPIKey.create()
   //generate new date to be written to table
   const date = new Date();
@@ -31,12 +16,6 @@ router.post('/private', jwtCheck, rules, async (req, res) => {
     .where({ user_id: req.body.id })
     .first()
 
-  // res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-  // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-
-
-  // res.status(200).json(`testing header construction`)
-
   bcrypt.hash(key.apiKey, 10, async (_err, hash) => {
     if (user) {
       try {
@@ -44,8 +23,6 @@ router.post('/private', jwtCheck, rules, async (req, res) => {
           .where({ user_id: req.body.id })
           //update table with key hash. Don't reset reset_date.
           .update({ key: hash, user_role: `freeUser` })
-        res.header("Access-Control-Allow-Origin", "http://localhost:3000/profile");
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         res.status(200).json({ existed: true, key: key.apiKey })
       } catch (err) {
         console.log(err)
@@ -59,10 +36,8 @@ router.post('/private', jwtCheck, rules, async (req, res) => {
           reset_date: dateMilliseconds,
           user_role: `freeUser`
         })
-        res.header("Access-Control-Allow-Origin", "http://localhost:3000/profile");
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         res.status(200).json({ existed: false, key: key.apiKey })
-      } catch (err) { 
+      } catch (err) {
         console.log(err)
         res.status(500).json({ Message: `There was an error when updating the API key`, Error: err })
       }
